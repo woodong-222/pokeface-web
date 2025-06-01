@@ -1,0 +1,15 @@
+.boardContainer {
+    width: 100%;
+    min-height: 100vh;
+
+    background-image: url('/src/assets/background.svg');
+    background-size: cover;
+    background-position: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    position: relative;
+}

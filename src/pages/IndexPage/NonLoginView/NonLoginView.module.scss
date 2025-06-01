@@ -1,0 +1,42 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  &__logo {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    max-width: 700px;
+    min-width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__frame {
+    display: flex;
+    gap: 60px;
+    margin-top: 300px;
+  }
+
+  &__button {
+    background-color: #ff7323;
+    border: none;
+    border-radius: 16px;
+    padding: 15px 60px;
+    color: #fafaf8;
+    font-size: 24px;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}

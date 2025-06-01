@@ -1,0 +1,29 @@
+import { useNavigate } from 'react-router-dom';
+import styles from './NonLoginView.module.scss';
+import Logo from 'src/assets/logo.svg';
+
+export default function NonLoginView() {
+	const navigate = useNavigate();
+
+	return (
+		<div className={styles.container}>
+			<div className={styles.container__logo}>
+				<Logo />
+			</div>
+			<div className={styles.container__frame}>
+				<button
+					className={styles.container__button}
+					onClick={() => navigate('/auth')}
+				>
+					로그인
+				</button>
+				<button
+					className={styles.container__button}
+					onClick={() => navigate('/auth/signup')}
+				>
+					회원가입
+				</button>
+			</div>
+		</div>
+	);
+}
