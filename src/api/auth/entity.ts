@@ -17,8 +17,8 @@ export interface SignupRequest {
 }
 
 export interface LoginRequest {
-	username: string;
-	password: string;
+	user_id: string;
+	user_pw: string;
 }
 
 export interface MeResponse {

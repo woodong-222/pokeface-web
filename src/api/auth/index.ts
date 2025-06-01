@@ -16,7 +16,8 @@ export const signup = async (userData: SignupRequest) => {
 };
 
 export const login = async (loginData: LoginRequest) => {
-	const { data } = await publicAxios.post('/login', loginData);
+
+	const { data } = await publicAxios.post('/login.php', loginData);
 
 	return data;
 };

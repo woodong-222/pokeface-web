@@ -2,7 +2,7 @@ import axios from 'axios';
 import useTokenState from '../hooks/useTokenState';
 
 const privateAxios = axios.create({
-	baseURL: `https://${import.meta.env.VITE_SERVER_URL}`,
+	baseURL: `${import.meta.env.VITE_SERVER_URL}`,
 });
 
 privateAxios.interceptors.request.use((config) => {

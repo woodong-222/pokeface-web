@@ -34,8 +34,8 @@ export default function LoginPage() {
 	const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		login({
-			username: id,
-			password: pw,
+			user_id: id,
+			user_pw: pw,
 		});
 
 		return;
