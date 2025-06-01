@@ -98,11 +98,9 @@ export default function LoginPage() {
 					</div>
 				</div>
 				<div>
-					{isError && (
-						<div className={styles.error}>
-							아이디 또는 비밀번호를 다시 확인해 주세요.
-						</div>
-					)}
+					<div className={styles.error}>
+						{isError ? '아이디 또는 비밀번호를 다시 확인해 주세요.' : '\u00A0'}
+					</div>
 					<button className={styles.container__submit} type="submit">
 						로그인
 					</button>

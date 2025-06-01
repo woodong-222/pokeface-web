@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import BlindIcon from 'src/assets/blind.svg';
 import DeleteIcon from 'src/assets/delete.svg';
 import EyeIcon from 'src/assets/eye.svg';
 import Logo from 'src/assets/logo.svg';
-import useLogin from '../../Auth/SignupPage/hooks/useLogin';
 import styles from './FindPasswordPage.module.scss';
 import useChangePassword from './hooks/useChangePassword';
 import useFindPassword from './hooks/useFindPassword';
@@ -12,11 +10,8 @@ import useFindPassword from './hooks/useFindPassword';
 const PASSWORDREG = /^(?=.*[A-Za-z])(?=.*\d)(?=.*\W).{8,}.+$/;
 
 export default function FindPasswordPage() {
-	const navigate = useNavigate();
 	const { mutateAsync: findPassword, isError } = useFindPassword();
 	const { mutateAsync: changePassword } = useChangePassword();
-
-	const { mutate: login } = useLogin();
 
 	const [id, setId] = useState('');
 	const [name, setName] = useState('');
@@ -62,24 +57,13 @@ export default function FindPasswordPage() {
 		}
 	};
 
-	const goHome = () => {
-		login({
-			user_id: id,
-			user_pw: password,
-		});
-		navigate('/');
-	};
-
 	return (
 		<div className={styles.container}>
 			<div className={styles.container__logo}>
 				<Logo />
 			</div>
 			{step === 1 && (
-				<div className={styles.container}>
-					<div className={styles.container__step}>
-						비밀번호를 찾고자하는 아이디와 전화번호를 입력해주세요.
-					</div>
+				<div className={styles.box}>
 					<div className={styles.form}>
 						<div className={styles.form__input}>
 							<input
@@ -99,9 +83,9 @@ export default function FindPasswordPage() {
 						</div>
 						<div className={styles.form__input}>
 							<input
-								type="tel"
+								type="text"
 								className={styles['form__input--text']}
-								placeholder="전화번호를 입력하세요. (ex. 010-0000-0000)"
+								placeholder="닉네임을 입력하세요."
 								value={name}
 								onChange={(e) => setName(e.target.value)}
 							/>
@@ -117,16 +101,13 @@ export default function FindPasswordPage() {
 					{errorMessage && (
 						<div className={styles['error-message']}>{errorMessage}</div>
 					)}
-					<button className={styles.container__button} onClick={handleStep}>
+					<button className={styles.box__button} onClick={handleStep}>
 						다음
 					</button>
 				</div>
 			)}
 			{step === 2 && (
-				<div className={styles.container}>
-					<div className={styles.container__step}>
-						새로운 비밀번호를 입력해주세요.
-					</div>
+				<div className={styles.box}>
 					<div className={styles.form}>
 						<div className={styles.form__input}>
 							<input
@@ -167,21 +148,11 @@ export default function FindPasswordPage() {
 							</button>
 						</div>
 					</div>
-					{errorMessage && (
-						<div className={styles['error-message']}>{errorMessage}</div>
-					)}
-					<button className={styles.container__button} onClick={handleStep}>
-						다음
-					</button>
-				</div>
-			)}
-			{step === 3 && (
-				<div className={styles['final-step']}>
-					<div className={styles['final-step__description']}>
-						새로운 비밀번호 설정이 완료되었습니다.
+					<div className={styles['error-message']}>
+						{errorMessage || '\u00A0'}
 					</div>
-					<button className={styles['final-step__button']} onClick={goHome}>
-						홈으로
+					<button className={styles.box__button} onClick={handleStep}>
+						다음
 					</button>
 				</div>
 			)}

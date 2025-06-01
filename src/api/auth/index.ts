@@ -39,7 +39,7 @@ export const checkNicknameDuplicate = async (
 };
 
 export const findPassword = async (passwordFindData: PasswordFindRequest) => {
-	const { data } = await publicAxios.post('/password/find', passwordFindData);
+	const { data } = await publicAxios.post('/password/find.php', passwordFindData);
 
 	return data;
 };
@@ -48,7 +48,7 @@ export const changePassword = async (
 	passwordChangeData: PasswordChangeRequest,
 ) => {
 	const { data } = await publicAxios.patch(
-		'/password/reset',
+		'/password/reset.php',
 		passwordChangeData,
 	);
 
