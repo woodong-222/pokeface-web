@@ -7,7 +7,11 @@ export default function NonLoginView() {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.container__logo}>
+			<div
+				className={styles.container__logo}
+				onClick={() => navigate('/')}
+				style={{ cursor: 'pointer' }}
+			>
 				<Logo />
 			</div>
 			<div className={styles.container__frame}>

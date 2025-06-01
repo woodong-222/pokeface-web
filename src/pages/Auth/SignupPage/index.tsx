@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@bcsdlab/utils';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -13,6 +14,7 @@ import useSignup from './hooks/useSignup';
 import styles from './SignupPage.module.scss';
 
 export default function SignupPage() {
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
@@ -77,7 +79,11 @@ export default function SignupPage() {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.container__logo}>
+			<div
+				className={styles.container__logo}
+				onClick={() => navigate('/')}
+				style={{ cursor: 'pointer' }}
+			>
 				<Logo />
 			</div>
 			<form className={styles.container__form} onSubmit={handleSubmit(onSubmit)}>

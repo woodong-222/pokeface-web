@@ -47,7 +47,11 @@ export default function LoginPage() {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.container__logo}>
+			<div
+				className={styles.container__logo}
+				onClick={() => navigate('/')}
+				style={{ cursor: 'pointer' }}
+			>
 				<Logo />
 			</div>
 			<form className={styles.container__form} onSubmit={onSubmit}>

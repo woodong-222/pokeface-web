@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BlindIcon from 'src/assets/blind.svg';
 import DeleteIcon from 'src/assets/delete.svg';
 import EyeIcon from 'src/assets/eye.svg';
@@ -10,6 +11,7 @@ import useFindPassword from './hooks/useFindPassword';
 const PASSWORDREG = /^(?=.*[A-Za-z])(?=.*\d)(?=.*\W).{8,}.+$/;
 
 export default function FindPasswordPage() {
+	const navigate = useNavigate();
 	const { mutateAsync: findPassword, isError } = useFindPassword();
 	const { mutateAsync: changePassword } = useChangePassword();
 
@@ -59,7 +61,11 @@ export default function FindPasswordPage() {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.container__logo}>
+			<div
+				className={styles.container__logo}
+				onClick={() => navigate('/')}
+				style={{ cursor: 'pointer' }}
+			>
 				<Logo />
 			</div>
 			{step === 1 && (
