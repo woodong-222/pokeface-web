@@ -1,4 +1,4 @@
-# Pokéface
+# Pokéface-web
 
 Pokéface is a PHP-based AI web project that assigns a unique Pokémon to each user's face and evolves it automatically upon repeated recognition.
 
