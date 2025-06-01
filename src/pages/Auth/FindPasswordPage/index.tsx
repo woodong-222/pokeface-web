@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import BlindIcon from 'src/assets/blind.svg';
 import DeleteIcon from 'src/assets/delete.svg';
 import EyeIcon from 'src/assets/eye.svg';
+import Logo from 'src/assets/logo.svg';
 import useLogin from '../../Auth/SignupPage/hooks/useLogin';
 import styles from './FindPasswordPage.module.scss';
 import useChangePassword from './hooks/useChangePassword';
@@ -18,7 +19,7 @@ export default function FindPasswordPage() {
 	const { mutate: login } = useLogin();
 
 	const [id, setId] = useState('');
-	const [phoneNumber, setPhoneNumber] = useState('');
+	const [name, setName] = useState('');
 	const [step, setStep] = useState(1);
 
 	const [password, setPassword] = useState('');
@@ -29,11 +30,11 @@ export default function FindPasswordPage() {
 	const handleStep = async () => {
 		if (step === 1) {
 			await findPassword({
-				username: id,
-				phone_number: phoneNumber,
+				user_id: id,
+				user_name: name,
 			});
 
-			if (!id || !phoneNumber || isError) return;
+			if (!id || !name || isError) return;
 
 			setStep((value) => value + 1);
 		}
@@ -52,9 +53,9 @@ export default function FindPasswordPage() {
 
 			setErrorMessage('');
 			changePassword({
-				username: id,
-				new_password: password,
-				confirm_password: passwordCheck,
+				user_id: id,
+				new_user_pw: password,
+				confirm_user_pw: passwordCheck,
 			});
 			setStep((value) => value + 1);
 			return;
@@ -63,14 +64,17 @@ export default function FindPasswordPage() {
 
 	const goHome = () => {
 		login({
-			username: id,
-			password: password,
+			user_id: id,
+			user_pw: password,
 		});
 		navigate('/');
 	};
 
 	return (
-		<>
+		<div className={styles.container}>
+			<div className={styles.container__logo}>
+				<Logo />
+			</div>
 			{step === 1 && (
 				<div className={styles.container}>
 					<div className={styles.container__step}>
@@ -98,12 +102,12 @@ export default function FindPasswordPage() {
 								type="tel"
 								className={styles['form__input--text']}
 								placeholder="전화번호를 입력하세요. (ex. 010-0000-0000)"
-								value={phoneNumber}
-								onChange={(e) => setPhoneNumber(e.target.value)}
+								value={name}
+								onChange={(e) => setName(e.target.value)}
 							/>
 							<button
 								className={styles['form__input--delete']}
-								onClick={() => setPhoneNumber('')}
+								onClick={() => setName('')}
 								tabIndex={-1}
 							>
 								<DeleteIcon />
@@ -181,6 +185,6 @@ export default function FindPasswordPage() {
 					</button>
 				</div>
 			)}
-		</>
+		</div>
 	);
 }

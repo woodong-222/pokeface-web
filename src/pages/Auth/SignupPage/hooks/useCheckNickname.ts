@@ -5,7 +5,7 @@ import { checkNicknameDuplicate } from '../../../../api/auth';
 export default function useCheckNickname() {
 	const { mutate, isError } = useMutation({
 		mutationFn: (nickname: string) =>
-			checkNicknameDuplicate({ nickname: nickname }),
+			checkNicknameDuplicate({ user_name: nickname }),
 
 		onSuccess: () => toast('사용 가능한 닉네임입니다.', { type: 'success' }),
 

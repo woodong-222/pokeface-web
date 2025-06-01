@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import BlindIcon from 'src/assets/blind.svg';
 import DeleteIcon from 'src/assets/delete.svg';
 import EyeIcon from 'src/assets/eye.svg';
+import Logo from 'src/assets/logo.svg';
 import useLogin from '../SignupPage/hooks/useLogin';
 import styles from './LoginPage.module.scss';
-import Logo from 'src/assets/logo.svg';
 
 export default function LoginPage() {
 	const navigate = useNavigate();

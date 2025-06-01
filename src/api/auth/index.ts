@@ -10,7 +10,7 @@ import {
 } from './entity';
 
 export const signup = async (userData: SignupRequest) => {
-	const { data } = await publicAxios.post('/register', userData);
+	const { data } = await publicAxios.post('/register/register.php', userData);
 
 	return data;
 };
@@ -23,7 +23,7 @@ export const login = async (loginData: LoginRequest) => {
 };
 
 export const getMe = async (): Promise<MeResponse> => {
-	const { data } = await privateAxios.get<MeResponse>('/me');
+	const { data } = await privateAxios.get<MeResponse>('/me.php');
 
 	return data;
 };
@@ -31,7 +31,7 @@ export const getMe = async (): Promise<MeResponse> => {
 export const checkNicknameDuplicate = async (
 	nickname: NicknameCheckRequest,
 ) => {
-	const { data } = await publicAxios.get('/register/nickname', {
+	const { data } = await publicAxios.get('/register/nickname.php', {
 		params: nickname,
 	});
 

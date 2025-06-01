@@ -4,6 +4,7 @@ import BoardPage from './pages/BoardPage';
 import IndexPage from './pages/IndexPage';
 import LoginPage from './pages/Auth/LoginPage';
 import SignupPage from './pages/Auth/SignupPage';
+import FindPasswordPage from './pages/Auth/FindPasswordPage';
 
 function App() {
 	return (
@@ -14,6 +15,7 @@ function App() {
 						<Route path="/" element={<IndexPage />} />
 						<Route path="/auth" element={<LoginPage />} />
 						<Route path="/auth/signup" element={<SignupPage />} />
+						<Route path="/auth/find-pw" element={<FindPasswordPage />} />
 					</Route>
 				</Routes>
 				<ToastContainer />

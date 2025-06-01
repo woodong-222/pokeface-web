@@ -11,8 +11,8 @@ export default function useSignup() {
 
 		onSuccess: (_data, variables) => {
 			login({
-				username: variables.username,
-				password: variables.password,
+				user_id: variables.user_id,
+				user_pw: variables.user_pw,
 			});
 			toast(_data.message, { type: 'success' });
 		},
