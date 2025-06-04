@@ -1,0 +1,910 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.backgroundDexWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh + 3vh);
+  min-width: 100px;
+  min-height: 800px;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url('src/assets/dex.svg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left calc(100% + 2vh);
+  opacity: 0.8;
+}
+
+.wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-width: 500px;
+  min-height: 800px;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 3vh;
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: calc(100vh - 3vh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.top {
+  position: absolute;
+  top: 1%;
+  left: 6%;
+  width: 88%;
+  height: 25%;
+  display: flex;
+  gap: 4vw;
+  align-items: flex-start;
+  justify-content: flex-start;
+  z-index: 2;
+}
+
+.buttons {
+  display: flex;
+  gap: 1.5vw;
+  align-items: flex-start;
+}
+
+.logo {
+  width: 10vw;
+  height: 10vw;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+  }
+  
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.subButtons {
+  display: flex;
+  width: 22vw;
+  height: 5vh;
+  padding: 2vh 0;
+  gap: 1.5vw;
+  align-items: flex-start;
+}
+
+.buttonWrapper {
+  position: relative;
+  
+  svg {
+    width: 3.5vw;
+    height: 3.5vw;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(0.95);
+      filter: brightness(0.9);
+    }
+    
+    &:active {
+      transform: scale(0.9);
+    }
+  }
+  
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -3vh;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #fafaf8;
+    padding: 0.5vh 1vw;
+    border-radius: 0.5vh;
+    font-size: max(0.7vw, 10px);
+    font-weight: 600;
+    font-family: 'Pretendard', sans-serif;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -2vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 0.5vh solid transparent;
+    border-right: 0.5vh solid transparent;
+    border-bottom: 0.5vh solid rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+  }
+  
+  &:hover::after,
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+.searchframe {
+  width: max(30vw, 280px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: 19.5vh;
+  padding-left: 21vh;
+}
+
+.searchBox {
+  width: max(22vw, 264px);
+  height: 2vh;
+  padding: 2vh 1.5vw;
+  background: #fafaf8;
+  border-radius: 1vw;
+  border: 2px solid #d1d1d1;
+  display: flex;
+  align-items: center;
+}
+
+.inSearch {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+
+  input {
+    font-size: max(0.8vw, 12px);
+    font-weight: 600;
+    font-family: 'Pretendard', sans-serif;
+    border: none;
+    background: transparent;
+    width: 100%;
+    color: #a2a2a2;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: #a2a2a2;
+    }
+  }
+
+  .deleteIcon {
+    width: max(1.2vw, 14px);
+    height: max(1.2vw, 14px);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+}
+
+.ownedToggleFrame {
+  width: max(1vw, 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 19vh;
+  gap: 1vh;
+}
+
+.ownedToggleLabel {
+  font-size: max(0.8vw, 12px);
+  font-weight: 700;
+  font-family: 'Pretendard', sans-serif;
+  color: #fafaf8;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.toggleSwitch {
+  position: relative;
+  width: max(4vw, 48px);
+  height: max(2.2vh, 26px);
+  background: linear-gradient(145deg, #bdc3c7, #95a5a6);
+  border-radius: max(1.1vh, 13px);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #fafaf8;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+  
+  &.active {
+    background: linear-gradient(145deg, #27ae60, #2ecc71);
+    box-shadow: 
+      inset 0 2px 4px rgba(0, 0, 0, 0.15),
+      0 2px 12px rgba(46, 204, 113, 0.4);
+  }
+}
+
+.toggleSlider {
+  position: absolute;
+  top: max(0.2vh, 2px);
+  left: max(0.2vh, 2px);
+  width: max(1.8vh, 20px);
+  height: max(1.8vh, 20px);
+  background: linear-gradient(145deg, #fafaf8, #f8f9fa);
+  border-radius: 50%;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.23);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  
+  .active & {
+    transform: translateX(max(1.8vw, 22px));
+    background: linear-gradient(145deg, #fafaf8, #ecf0f1);
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.2),
+      0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.board {
+  position: absolute;
+  top: 30.5%;
+  left: 8.37%;
+  width: 77%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 1vw 1vw 0 0;
+  z-index: 2;
+}
+
+.typeFilter {
+  padding: 1.5vh 1vw;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8vw;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1vw 1vw 0 0;
+  flex-shrink: 0;
+}
+
+.typeButton {
+  min-width: max(3vw, 36px);
+  height: max(2.5vh, 24px);
+  padding: 0 max(0.5vw, 12px);
+  font-size: max(0.7vw, 10px);
+  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  color: #FAFAF8;
+  border: none;
+  border-radius: max(0.5vw, 6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &.selected {
+    box-shadow: 
+      inset 0 0 4px rgba(0, 0, 0, 0.25),
+      0 0 0 2px #fafaf8,
+      0 0 0 4px rgba(255, 255, 255, 0.3);
+    filter: brightness(1.2);
+  }
+
+  &:first-child {
+    background: #666666;
+  }
+}
+
+.cardList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1vh 1vw;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 200px));
+  gap: max(3vw, 20px);
+  row-gap: max(1.5vw, 15px);
+  justify-content: center;
+  align-content: start;
+  
+  &.few-cards {
+    justify-content: start;
+  }
+}
+
+.cardList::-webkit-scrollbar {
+  width: 0.5vw;
+}
+
+.cardList::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 0.3vw;
+}
+
+.cardList::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 35 / 54;
+  margin: 0 auto;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.cardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+  padding: 12px;
+  border-radius: 16px;
+  border: 5px solid #fafaf8;
+}
+
+.cardInner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 11px;
+  background: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.15) 0%, transparent 20%, transparent 80%, rgba(0, 0, 0, 0.15) 100%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, transparent 20%, transparent 80%, rgba(0, 0, 0, 0.15) 100%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.card:hover .cardInner {
+  transform: rotateY(180deg);
+}
+
+.cardFront,
+.cardBack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+.cardFront {
+  transform: rotateY(0deg);
+}
+
+.cardBack {
+  transform: rotateY(180deg);
+  overflow: hidden;
+}
+
+.cardBack::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  height: calc(50% + 6px);
+  background: #FF4040;
+  z-index: 1;
+}
+
+.cardBack::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: -12px;
+  right: -12px;
+  height: calc(50% + 6px);
+  background: #D4D4D4;
+  z-index: 1;
+}
+
+.centerLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: #1A1A1A;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.pokeBallContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  z-index: 4;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.pokefaceLogoContainer {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 15px;
+  z-index: 4;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.innerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding-top: 6px;
+  position: relative;
+  z-index: 2;
+}
+
+.imageWrapper {
+  width: calc(100% - 32px);
+  height: 171px;
+  padding: 4px;
+  background: #d9d9d9;
+  border-radius: 16px;
+  box-shadow: inset 0px 0px 4px 3px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 3;
+
+  img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+  }
+}
+
+.no {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Pretendard', sans-serif;
+  text-align: center;
+  margin-top: 0px;
+}
+
+.name {
+  color: #fafaf8;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Pretendard', sans-serif;
+  text-align: center;
+  margin-top: 0px;
+}
+
+.typeBox {
+  width: 106px;
+  height: 28px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.type {
+  min-width: 48px;
+  height: 28px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  color: #FAFAF8;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.25);
+}
+
+.loading {
+  grid-column: 1 / -1;
+  color: #888;
+  padding: 2vh;
+  text-align: center;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.8vw;
+}
+
+.endMessage {
+  grid-column: 1 / -1;
+  color: #aaa;
+  padding: 2vh;
+  text-align: center;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.8vw;
+}
+
+@media (max-width: 1200px) {
+  .wrapper {
+    min-width: 1200px;
+    overflow-x: auto;
+  }
+  
+  .backgroundDexWrapper {
+    min-width: 1200px;
+  }
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modalContent {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  background: #fafaf8;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(1.1);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  gap: 20px;
+  padding: 30px;
+  color: #fafaf8;
+  align-items: center;
+}
+
+.modalImageWrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  
+  img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;    
+    image-rendering: pixelated;
+    transform: scale(2);
+  }
+}
+
+.modalBasicInfo {
+  flex: 1;
+}
+
+.modalPokemonName {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: 'Pretendard', sans-serif;
+  margin: 0 0 8px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.modalPokemonNo {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Pretendard', sans-serif;
+  opacity: 0.9;
+  margin-bottom: 15px;
+}
+
+.modalTypeBox {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modalType {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  color: #FAFAF8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modalBody {
+  padding: 25px 30px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.modalBody::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modalBody::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.modalBody::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.modalSection {
+  margin-bottom: 25px;
+  
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+  }
+}
+
+.modalInfoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modalInfoItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modalInfoLabel {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  color: #666;
+  min-width: 80px;
+}
+
+.modalInfoValue {
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Pretendard', sans-serif;
+  color: #333;
+}
+
+.modalDescription {
+  font-size: 15px;
+  font-weight: 400;
+  font-family: 'Pretendard', sans-serif;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 종족값 스타일 */
+.statsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statLabel {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  color: #666;
+  min-width: 50px;
+  text-align: right;
+}
+
+.statBar {
+  flex: 1;
+  height: 20px;
+  background: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.statFill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+    animation: shimmer 2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.statValue {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  color: #333;
+  min-width: 35px;
+  text-align: right;
+}
+
+.modalLoading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  font-family: 'Pretendard', sans-serif;
+  color: #666;
+}
+
+.card {
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .modalContent {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .modalHeader {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    gap: 15px;
+  }
+  
+  .modalImageWrapper {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .modalPokemonName {
+    font-size: 24px;
+  }
+  
+  .modalBody {
+    padding: 20px;
+  }
+  
+  .statItem {
+    gap: 8px;
+  }
+  
+  .statLabel {
+    min-width: 40px;
+    font-size: 12px;
+  }
+  
+  .statValue {
+    min-width: 30px;
+    font-size: 12px;
+  }
+}
