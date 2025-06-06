@@ -10,6 +10,7 @@ import AlbumPage from './pages/Dex/AlbumPage';
 import CommunityPage from './pages/Dex/CommunityPage';
 import NoticePage from './pages/Dex/NoticePage';
 import MypagePage from './pages/Dex/MypagePage';
+import SamplePage from './pages/Dex/SamplePage';
 
 function App() {
 	return (
@@ -26,6 +27,7 @@ function App() {
 						<Route path="/community" element={<CommunityPage />} />
 						<Route path="/notice" element={<NoticePage />} />
 						<Route path="/mypage" element={<MypagePage />} />
+						<Route path="/sample" element={<SamplePage />} />
 					</Route>
 				</Routes>
 				<ToastContainer />

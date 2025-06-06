@@ -71,11 +71,10 @@ html, body {
 }
 
 .logo {
-  width: clamp(120px, 11vw, 180px);
-  height: clamp(120px, 11vw, 180px);
+  width: clamp(160px, 11vw, 180px);
+  height: clamp(160px, 20vh, 180px);
   flex-shrink: 0;
   cursor: pointer;
-  transition: all 0.2s ease;
   
   &:hover {
     transform: scale(0.95);
@@ -89,9 +88,9 @@ html, body {
 
 .subButtons {
   display: flex;
-  width: 18vw;
+  width: 13.1vw;
   height: 5vh;
-  padding: 2vh 0;
+  padding: 2vw 0;
   gap: 1vw;
   align-items: flex-start;
 }
@@ -100,10 +99,9 @@ html, body {
   position: relative;
   
   svg {
-    width: clamp(30px, 3vw, 60px);
-    height: clamp(30px, 3vw, 60px);
+    width: clamp(30px, 5vw, 60px);
+    height: clamp(30px, 5vh, 60px);
     cursor: pointer;
-    transition: all 0.2s ease;
     
     &:hover {
       transform: scale(0.95);
@@ -156,6 +154,7 @@ html, body {
     opacity: 1;
   }
 }
+
 .dexControls {
   flex: 1;
   display: flex;
@@ -173,17 +172,13 @@ html, body {
   backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.5vw;
   max-width: none;
   width: 34.5vw;
   min-width: 202px;
   height: 10.1vh;
   flex-shrink: 0;
-  
-  &:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    background: rgba(0, 0, 0, 0.15);
-  }
   
   &::before {
     content: '';
@@ -203,6 +198,33 @@ html, body {
   }
 }
 
+.pageTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5vh;
+  color: #fafaf8;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+
+  h2 {
+    font-size: clamp(16px, 1.2vw, 20px);
+    font-weight: 700;
+    font-family: 'Pretendard', sans-serif;
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  }
+
+  p {
+    font-size: clamp(10px, 0.8vw, 14px);
+    font-family: 'Pretendard', sans-serif;
+    margin: 0;
+    opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  }
+}
+
 .board {
   position: absolute;
   top: 30.5%;
@@ -214,4 +236,351 @@ html, body {
   overflow: hidden;
   border-radius: 1vw 1vw 0 0;
   z-index: 2;
+}
+
+.albumContainer {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.albumContainer::-webkit-scrollbar {
+  width: 0.5vw;
+}
+
+.albumContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0.3vw;
+}
+
+.albumContainer::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.loadingSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1vh;
+
+  .loadingSpinner {
+    font-size: 40px;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  from { 
+    transform: rotate(0deg); 
+  }
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+
+.captureGrid {
+  padding: 2vh 2vw;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2vh 1.5vw;
+}
+
+.captureCard {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5vh 1.5vw;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.pokemonImageContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  padding: 2vh;
+  margin-bottom: 1.5vh;
+  height: 120px;
+}
+
+.pokemonImage {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+}
+
+.evolutionBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'Pretendard', sans-serif;
+  padding: 4px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.captureInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1vw;
+}
+
+.pokemonInfo {
+  flex: 1;
+}
+
+.pokemonNumber {
+  font-size: clamp(11px, 0.8vw, 13px);
+  font-weight: 500;
+  font-family: 'Pretendard', sans-serif;
+  color: #666;
+  display: block;
+  margin-bottom: 0.5vh;
+}
+
+.pokemonName {
+  font-size: clamp(16px, 1.2vw, 18px);
+  font-weight: 700;
+  font-family: 'Pretendard', sans-serif;
+  color: #333;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.captureDate {
+  font-size: clamp(10px, 0.7vw, 12px);
+  font-weight: 400;
+  font-family: 'Pretendard', sans-serif;
+  color: #999;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+// 모달 스타일
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modalContent {
+  background: #fafaf8;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 30px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+
+  .modalTitleSection {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .pokemonNumberModal {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Pretendard', sans-serif;
+    color: #666;
+    background: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+
+  .evolutionBadgeModal {
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Pretendard', sans-serif;
+    padding: 4px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .closeButton {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    color: #666;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.2);
+      transform: scale(1.1);
+    }
+  }
+}
+
+.modalInfo {
+  padding: 20px 30px;
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Pretendard', sans-serif;
+    color: #666;
+  }
+}
+
+.modalBody {
+  padding: 25px 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modalBody::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modalBody::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 3px;
+}
+
+.modalBody::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.imageComparison {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  justify-content: center;
+}
+
+.imageSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Pretendard', sans-serif;
+    color: #333;
+    margin: 0;
+  }
+}
+
+.originalImage, .capturedImageLarge {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.capturedImageLarge {
+  object-fit: contain;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.arrowSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .arrow {
+    font-size: 24px;
+    color: #666;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 768px) {
+  .captureGrid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5vh 1vw;
+  }
+
+  .imageComparison {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .arrowSection .arrow {
+    transform: rotate(90deg);
+  }
 }

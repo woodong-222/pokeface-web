@@ -71,11 +71,10 @@ html, body {
 }
 
 .logo {
-  width: clamp(120px, 11vw, 180px);
-  height: clamp(120px, 11vw, 180px);
+  width: clamp(160px, 11vw, 180px);
+  height: clamp(160px, 20vh, 180px);
   flex-shrink: 0;
   cursor: pointer;
-  transition: all 0.2s ease;
   
   &:hover {
     transform: scale(0.95);
@@ -89,9 +88,9 @@ html, body {
 
 .subButtons {
   display: flex;
-  width: 18vw;
+  width: 13.1vw;
   height: 5vh;
-  padding: 2vh 0;
+  padding: 2vw 0;
   gap: 1vw;
   align-items: flex-start;
 }
@@ -100,10 +99,9 @@ html, body {
   position: relative;
   
   svg {
-    width: clamp(30px, 3vw, 60px);
-    height: clamp(30px, 3vw, 60px);
+    width: clamp(30px, 5vw, 60px);
+    height: clamp(30px, 5vh, 60px);
     cursor: pointer;
-    transition: all 0.2s ease;
     
     &:hover {
       transform: scale(0.95);
@@ -179,11 +177,6 @@ html, body {
   min-width: 202px;
   height: 10.1vh;
   flex-shrink: 0;
-  
-  &:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    background: rgba(0, 0, 0, 0.15);
-  }
   
   &::before {
     content: '';
