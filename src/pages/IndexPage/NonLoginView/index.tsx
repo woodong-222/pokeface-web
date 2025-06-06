@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './NonLoginView.module.scss';
-import Logo from 'src/assets/logo.svg';
+import Logo from 'src/assets/logo.svg?react';
 
 export default function NonLoginView() {
 	const navigate = useNavigate();

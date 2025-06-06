@@ -1,12 +1,9 @@
-@use "/src/utils/scss/media" as media;
-/* stylelint-disable scss/at-import-no-partial-leading-underscore */
-
 #root {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 1484px;
-  min-height: 100vh;
+  min-width: 585px !important;
+  min-height: 780px !important;
   -webkit-font-smoothing: antialiased;
 
   /* https://css-tricks.com/snippets/css/system-font-stack/ */
@@ -21,14 +18,6 @@
     "Apple Color Emoji",
     "Segoe UI Emoji",
     "Segoe UI Symbol";
-
-  @include media.mobile {
-    min-width: 360px;
-  }
-
-  @include media.tablet {
-    min-width: 768px;
-  }
 }
 
 a,

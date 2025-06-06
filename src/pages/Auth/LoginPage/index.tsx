@@ -1,9 +1,9 @@
 import { SetStateAction, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BlindIcon from 'src/assets/blind.svg';
-import DeleteIcon from 'src/assets/delete.svg';
-import EyeIcon from 'src/assets/eye.svg';
-import Logo from 'src/assets/logo.svg';
+import BlindIcon from 'src/assets/blind.svg?react';
+import DeleteIcon from 'src/assets/delete.svg?react';
+import EyeIcon from 'src/assets/eye.svg?react';
+import Logo from 'src/assets/logo.svg?react';
 import useLogin from '../SignupPage/hooks/useLogin';
 import styles from './LoginPage.module.scss';
 

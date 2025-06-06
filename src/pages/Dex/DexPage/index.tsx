@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './DexPage.module.scss';
 import Logo from 'src/assets/logobutton.svg?react';
 import Button1 from 'src/assets/button1.svg?react';
 import Button2 from 'src/assets/button2.svg?react';
@@ -10,6 +9,7 @@ import Button5 from 'src/assets/button5.svg?react';
 import DeleteIcon from 'src/assets/delete.svg?react';
 import PokeBall from 'src/assets/bell.svg?react';
 import PokefaceLogo from 'src/assets/logo.svg?react';
+import styles from './DexPage.module.scss';
 
 const MAX_POKEMON = 151;
 
@@ -68,10 +68,6 @@ export default function DexPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pokemonDetail, setPokemonDetail] = useState<Pokemon | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
-  
-  const handleLogoClick = () => {
-    navigate('/');
-  };
 
   const loadAllPokemons = async () => {
     setIsLoading(true);
@@ -173,6 +169,18 @@ export default function DexPage() {
     setPokemonDetail(null);
   };
 
+  const handleLogoClick = () => {
+    setSearch('');
+    setSelectedTypes(new Set());
+    setShowOwnedOnly(false);
+    
+    if (isModalOpen) {
+      closeModal();
+    }
+    
+    navigate('/');
+  };
+
   useEffect(() => {
     loadAllPokemons();
   }, []);
@@ -239,43 +247,49 @@ export default function DexPage() {
             <div className={styles.buttons}>
               <Logo className={styles.logo} onClick={handleLogoClick} />
               <div className={styles.subButtons}>
-                <div className={styles.buttonWrapper} data-tooltip="도감">
+                <div className={styles.buttonWrapper} onClick={() => navigate('/hunt')} data-tooltip="야생포켓몬 포획">
                   <Button1 />
                 </div>
-                <div className={styles.buttonWrapper} data-tooltip="야생포켓몬 포획">
+                <div className={styles.buttonWrapper} onClick={() => navigate('/album')} data-tooltip="앨범">
                   <Button2 />
                 </div>
-                <div className={styles.buttonWrapper} data-tooltip="커뮤니티">
+                <div className={styles.buttonWrapper} onClick={() => navigate('/community')} data-tooltip="커뮤니티">
                   <Button3 />
                 </div>
-                <div className={styles.buttonWrapper} data-tooltip="앨범">
+                <div className={styles.buttonWrapper} onClick={() => navigate('/notice')} data-tooltip="공지사항">
                   <Button4 />
                 </div>
-                <div className={styles.buttonWrapper} data-tooltip="마이페이지">
+                <div className={styles.buttonWrapper} onClick={() => navigate('/mypage')} data-tooltip="마이페이지">
                   <Button5 />
                 </div>
               </div>
             </div>
-            <div className={styles.searchframe}>
-              <div className={styles.searchBox}>
-                <div className={styles.inSearch}>
-                  <input
-                    type="text"
-                    placeholder="검색어를 입력하세요."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                  <DeleteIcon className={styles.deleteIcon} onClick={() => setSearch('')} />
+            <div className={styles.dexControls}>
+              <div className={styles.dexScreenContainer}>
+                <div className={styles.dexSearchBox}>
+                  <div className={styles.dexSearchInput}>
+                    <input
+                      type="text"
+                      placeholder="포켓몬을 검색하세요."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <DeleteIcon 
+                      className={styles.deleteIcon} 
+                      onClick={() => setSearch('')} 
+                    />
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className={styles.ownedToggleFrame}>
-              <div className={styles.ownedToggleLabel}>보유 포켓몬</div>
-              <div 
-                className={`${styles.toggleSwitch} ${showOwnedOnly ? styles.active : ''}`}
-                onClick={() => setShowOwnedOnly(!showOwnedOnly)}
-              >
-                <div className={styles.toggleSlider}></div>
+                
+                <div className={styles.dexToggleSection}>
+                  <div className={styles.dexToggleLabel}>보유 포켓몬</div>
+                  <div 
+                    className={`${styles.dexToggleSwitch} ${showOwnedOnly ? styles.active : ''}`}
+                    onClick={() => setShowOwnedOnly(!showOwnedOnly)}
+                  >
+                    <div className={styles.dexToggleSlider}></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
