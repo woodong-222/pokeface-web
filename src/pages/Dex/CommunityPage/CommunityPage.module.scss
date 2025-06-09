@@ -421,16 +421,16 @@ html, body {
   margin-top: 1vh;
   border-radius: 12px;
   overflow: hidden;
-  max-width: 500px; // 최대 크기를 좀 더 크게
-  width: fit-content; // 이미지 실제 크기에 맞춤
+  max-width: 500px;
+  width: fit-content;
   
   img {
-    width: auto; // 이미지 원본 크기 유지
+    width: auto;
     height: auto;
-    max-width: 500px; // 최대 너비 제한
-    max-height: 400px; // 최대 높이도 제한
+    max-width: 500px;
+    max-height: 400px;
     display: block;
-    object-fit: contain; // 비율 유지하면서 크기 조정
+    object-fit: contain;
   }
 }
 
@@ -470,7 +470,6 @@ html, body {
   }
 }
 
-// 모달 스타일
 .modalOverlay {
   position: fixed;
   top: 0;

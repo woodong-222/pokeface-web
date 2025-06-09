@@ -264,7 +264,6 @@ export default function DexPage() {
       const userPokemon = userPokemons.find(up => up.pokemon_id === pokemon.id);
       
       const getMinEvolutionStage = (pokemonId: number): number => {
-        // 2단계부터 시작하는 포켓몬들
         const secondStageStarters = [
           20, 22, 24, 26, 28, 36, 38, 40, 42, 47, 49, 51, 53, 55, 57, 59,
           73, 78, 80, 82, 85, 87, 89, 91, 97, 99, 101, 103, 105, 110, 112,

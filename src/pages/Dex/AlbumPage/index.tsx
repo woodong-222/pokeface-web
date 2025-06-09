@@ -11,7 +11,7 @@ import { getImageUrl } from '../../../utils/functions/imageUrl';
 
 interface CaptureRecord {
   id: number;
-  pokemonName?: string; // 옵셔널로 변경
+  pokemonName?: string;
   pokemonNumber: number;
   originalImage: string;
   captureDate: string;
@@ -47,15 +47,13 @@ export default function AlbumPage() {
     setIsLoading(true);
     
     try {
-      // API 모듈 사용
       const { getAlbum } = await import('../../../api/pokemon');
       const result = await getAlbum({ page: 1, limit: 50, order: 'desc' });
       
       if (result.message === 'Success') {
-        // API 데이터를 컴포넌트 형식에 맞게 변환
         const transformedData = result.data.map(record => ({
           id: record.id,
-          pokemonName: '', // PokeAPI에서 가져올 예정이므로 빈 문자열
+          pokemonName: '',
           pokemonNumber: record.pokemonNumber,
           originalImage: record.originalImage,
           captureDate: record.captureDate
@@ -71,12 +69,10 @@ export default function AlbumPage() {
       console.error('포획 기록 로드 실패:', error);
       setIsLoading(false);
       
-      // 인증 에러 시 홈으로 이동
       if (error?.response?.status === 401) {
         localStorage.removeItem('accessToken');
         navigate('/');
       } else {
-        // 에러 시 빈 배열로 설정
         setCaptureHistory([]);
       }
     }

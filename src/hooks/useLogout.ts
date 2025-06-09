@@ -9,7 +9,7 @@ export default function useLogout() {
 		localStorage.removeItem('accessToken');
 		queryClient.removeQueries({ queryKey: ['userInfo'] });
 		if (window.location.pathname === '/') {
-			navigate(0); // 현재 경로에서 새로고침
+			navigate(0);
 		} else {
 			navigate('/');
 		}

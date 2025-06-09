@@ -1,5 +1,3 @@
-// 커뮤니티 관련 API 타입 정의
-
 export interface CommunityPost {
   id: number;
   title: string;
@@ -9,7 +7,7 @@ export interface CommunityPost {
   createdAt: string;
   likeCount: number;
   isLiked: boolean;
-  isAuthor: boolean; // 작성자 여부 추가
+  isAuthor: boolean;
   image?: string;
 }
 

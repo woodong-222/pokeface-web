@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../../../api/auth';
-// import { toast } from "react-toastify";
 
 export default function useLogin() {
 	const navigate = useNavigate();
@@ -15,7 +14,6 @@ export default function useLogin() {
 		},
 
 		onError: () => {
-			// toast("아이디 또는 비밀번호를 다시 확인해 주세요.", { type: "error"});
 		},
 	});
 

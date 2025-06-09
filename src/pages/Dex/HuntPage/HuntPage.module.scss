@@ -449,7 +449,6 @@ html, body {
   }
 }
 
-// 모달 스타일
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -513,7 +512,6 @@ html, body {
   }
 }
 
-// 에러 모달 스타일
 .errorModal {
   border: 3px solid #ff6b6b;
   box-shadow: 0 20px 40px rgba(255, 107, 107, 0.4);
@@ -565,7 +563,6 @@ html, body {
   justify-content: center;
 }
 
-// 성공 결과 모달 스타일
 .resultHeader {
   padding: 30px 30px 20px;
   text-align: center;
@@ -692,7 +689,6 @@ html, body {
   }
 }
 
-// 희귀 포켓몬 관련 스타일
 .rareInfo {
   background: linear-gradient(135deg, #ffd700, #ffed4e);
   color: #8b4513;

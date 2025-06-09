@@ -93,15 +93,12 @@ export default function HuntPage() {
     }
   };
 
-  // 에러 표시 함수
   const showError = (message: string) => {
     setErrorMessage(message);
     setShowErrorModal(true);
   };
 
-  // 에러 메시지 매핑 함수
   const getKoreanErrorMessage = (error: string): string => {
-    // 백엔드에서 오는 에러 메시지들을 한국어로 매핑
     const errorMappings: { [key: string]: string } = {
       '얼굴을 감지할 수 없습니다. 명확한 얼굴이 포함된 이미지를 사용해주세요.': '얼굴을 감지할 수 없습니다.\n\n명확한 얼굴이 포함된 이미지를 사용해주세요.',
       'Face detection failed': '얼굴 인식에 실패했습니다.\n\n다른 이미지를 시도해보세요.',
@@ -151,7 +148,6 @@ export default function HuntPage() {
       const data: CaptureResponse = await response.json();
       
       if (!response.ok || data.message === 'Face detection failed') {
-        // 에러 응답 처리
         const errorMsg = data.error || data.message || 'Unknown error';
         const koreanMsg = getKoreanErrorMessage(errorMsg);
         showError(koreanMsg);
@@ -167,14 +163,12 @@ export default function HuntPage() {
     } catch (error: any) {
       console.error('포켓몬 포획 실패:', error);
       
-      // 인증 오류 시 로그인 페이지로 이동
       if (error.message.includes('401') || error.message.includes('Unauthorized')) {
         localStorage.removeItem('accessToken');
         navigate('/login');
         return;
       }
       
-      // 네트워크 에러나 기타 에러 처리
       const koreanMsg = getKoreanErrorMessage(error.message);
       showError(koreanMsg);
     } finally {
@@ -210,13 +204,11 @@ export default function HuntPage() {
     navigate('/album');
   };
 
-  // 희귀 포켓몬 체크
   const isRarePokemon = (pokemonId: number): boolean => {
-    const rarePokemon = [131, 132, 143, 144, 145, 146, 150, 151]; // 라프라스, 메타몽, 잠만보, 전설의새, 뮤츠, 뮤
+    const rarePokemon = [131, 132, 143, 144, 145, 146, 150, 151];
     return rarePokemon.includes(pokemonId);
   };
 
-  // 희귀 포켓몬 메시지
   const getRarePokemonMessage = (pokemonId: number): string => {
     const messages: { [key: number]: string } = {
       131: '라프라스는 포켓몬을 3단계까지 진화시켜야 만날 수 있는 희귀한 포켓몬입니다!',

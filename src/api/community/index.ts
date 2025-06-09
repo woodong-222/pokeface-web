@@ -11,7 +11,6 @@ import {
   PostsParams,
 } from './entity';
 
-// 게시글 목록 조회 (인증 필요)
 export const getPosts = async (params: PostsParams = {}): Promise<PostsResponse> => {
   const { limit = 20, offset = 0 } = params;
   
@@ -22,9 +21,7 @@ export const getPosts = async (params: PostsParams = {}): Promise<PostsResponse>
   return data;
 };
 
-// 게시글 작성 (인증 필요)
 export const createPost = async (postData: CreatePostRequest): Promise<CreatePostResponse> => {
-  // FormData 생성
   const formData = new FormData();
   formData.append('title', postData.title);
   formData.append('content', postData.content);
@@ -42,7 +39,6 @@ export const createPost = async (postData: CreatePostRequest): Promise<CreatePos
   return data;
 };
 
-// 게시글 삭제 (인증 필요)
 export const deletePost = async (deleteData: DeletePostRequest): Promise<DeletePostResponse> => {
   const { data } = await privateAxios.delete<DeletePostResponse>('/community/delete.php', {
     data: deleteData,
@@ -50,13 +46,11 @@ export const deletePost = async (deleteData: DeletePostRequest): Promise<DeleteP
   return data;
 };
 
-// 좋아요 토글 (인증 필요)
 export const toggleLike = async (likeData: LikeRequest): Promise<LikeResponse> => {
   const { data } = await privateAxios.post<LikeResponse>('/community/like.php', likeData);
   return data;
 };
 
-// 이미지 업로드 (인증 필요)
 export const uploadImage = async (image: File): Promise<UploadImageResponse> => {
   const formData = new FormData();
   formData.append('image', image);

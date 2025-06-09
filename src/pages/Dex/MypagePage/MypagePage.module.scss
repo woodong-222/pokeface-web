@@ -288,7 +288,6 @@ html, body {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-// 프로필 카드
 .profileCard {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 20px;
@@ -385,7 +384,6 @@ html, body {
   }
 }
 
-// 통계 그리드
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

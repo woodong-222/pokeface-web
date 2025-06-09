@@ -1,5 +1,3 @@
-// 공지사항 관련 API 타입 정의
-
 export interface NoticePost {
 	id: number;
 	title: string;

@@ -40,7 +40,6 @@ export default function NoticePage() {
     setIsLoading(true);
     
     try {
-      // 새로운 API 사용 (상대 경로로 수정)
       const { getNotices } = await import('../../../api/notice');
       const result = await getNotices({ page: 1, limit: 20 });
       
@@ -55,7 +54,6 @@ export default function NoticePage() {
       console.error('공지사항 로드 실패:', error);
       setIsLoading(false);
       
-      // 에러 시 빈 배열로 설정
       setNotices([]);
     }
   };

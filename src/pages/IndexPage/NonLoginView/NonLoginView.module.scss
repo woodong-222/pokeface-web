@@ -5,14 +5,14 @@
   background-position: center;
   display: flex;
   flex-direction: column;
-  align-items: center; // 가로 중앙정렬만 유지
-  justify-content: flex-start; // 세로는 위쪽부터 시작
+  align-items: center;
+  justify-content: flex-start;
   position: relative;
-  padding: 0 20px; // 좌우 패딩만
+  padding: 0 20px;
   box-sizing: border-box;
 
   &__logo {
-    margin-top: 80px; // 상단에서 고정 거리
+    margin-top: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,7 +41,7 @@
   }
 
   &__frame {
-    margin-top: 300px; // 로고에서 고정 거리
+    margin-top: 300px;
     display: flex;
     gap: 60px;
     justify-content: center;

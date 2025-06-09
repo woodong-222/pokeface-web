@@ -1,8 +1,6 @@
-// 포켓몬 관련 API 타입 정의
-
 export interface CaptureRecord {
   id: number;
-  pokemonName?: string; // 옵셔널로 추가 (클라이언트에서 추가할 수 있음)
+  pokemonName?: string;
   pokemonNumber: number;
   originalImage: string;
   captureDate: string;

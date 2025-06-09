@@ -108,7 +108,6 @@ export default function CommunityPage() {
       const result = await deletePost({ postId });
       
       if (result.message === 'Post deleted successfully') {
-        // 삭제된 게시글을 목록에서 제거
         setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
         alert('게시글이 삭제되었습니다.');
       } else {
@@ -125,7 +124,6 @@ export default function CommunityPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // 파일 크기 체크 (5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('이미지 크기는 5MB 이하만 업로드 가능합니다.');
         return;
@@ -133,7 +131,6 @@ export default function CommunityPage() {
 
       setNewPost(prev => ({ ...prev, image: file }));
       
-      // 미리보기 생성
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
@@ -159,7 +156,6 @@ export default function CommunityPage() {
       });
       
       if (result.message === 'Post created successfully') {
-        // 새 게시글을 목록 맨 앞에 추가
         setPosts(prev => [result.post, ...prev]);
         setShowWriteModal(false);
         setNewPost({ title: '', content: '', image: null });
