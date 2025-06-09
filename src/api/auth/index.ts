@@ -23,7 +23,7 @@ export const login = async (loginData: LoginRequest) => {
 };
 
 export const getMe = async (): Promise<MeResponse> => {
-	const { data } = await privateAxios.get<MeResponse>('/me.php');
+	const { data } = await privateAxios.get<MeResponse>('/user/me.php');
 
 	return data;
 };

@@ -7,10 +7,11 @@ import Button3 from 'src/assets/button3.svg?react';
 import Button4 from 'src/assets/button4.svg?react';
 import Button5 from 'src/assets/button5.svg?react';
 import styles from './AlbumPage.module.scss';
+import { getImageUrl } from '../../../utils/functions/imageUrl';
 
 interface CaptureRecord {
   id: number;
-  pokemonName: string;
+  pokemonName?: string; // 옵셔널로 변경
   pokemonNumber: number;
   originalImage: string;
   captureDate: string;
@@ -46,59 +47,38 @@ export default function AlbumPage() {
     setIsLoading(true);
     
     try {
-      // TODO: 실제 API 호출로 대체
-      setTimeout(() => {
-        const mockCaptureHistory: CaptureRecord[] = [
-          {
-            id: 1,
-            pokemonName: '피카츄',
-            pokemonNumber: 25,
-            originalImage: '/uploads/user1.jpg',
-            captureDate: '2025-06-06T14:30:00Z'
-          },
-          {
-            id: 2,
-            pokemonName: '파이리',
-            pokemonNumber: 4,
-            originalImage: '/uploads/user2.jpg',
-            captureDate: '2025-06-06T12:15:00Z'
-          },
-          {
-            id: 3,
-            pokemonName: '꼬부기',
-            pokemonNumber: 7,
-            originalImage: '/uploads/user3.jpg',
-            captureDate: '2025-06-05T16:45:00Z'
-          },
-          {
-            id: 4,
-            pokemonName: '이상해씨',
-            pokemonNumber: 1,
-            originalImage: '/uploads/user4.jpg',
-            captureDate: '2025-06-05T10:20:00Z'
-          },
-          {
-            id: 5,
-            pokemonName: '라이츄',
-            pokemonNumber: 26,
-            originalImage: '/uploads/user5.jpg',
-            captureDate: '2025-06-04T18:00:00Z'
-          },
-          {
-            id: 6,
-            pokemonName: '푸린',
-            pokemonNumber: 39,
-            originalImage: '/uploads/user6.jpg',
-            captureDate: '2025-06-04T09:30:00Z'
-          }
-        ];
+      // API 모듈 사용
+      const { getAlbum } = await import('../../../api/pokemon');
+      const result = await getAlbum({ page: 1, limit: 50, order: 'desc' });
+      
+      if (result.message === 'Success') {
+        // API 데이터를 컴포넌트 형식에 맞게 변환
+        const transformedData = result.data.map(record => ({
+          id: record.id,
+          pokemonName: '', // PokeAPI에서 가져올 예정이므로 빈 문자열
+          pokemonNumber: record.pokemonNumber,
+          originalImage: record.originalImage,
+          captureDate: record.captureDate
+        }));
         
-        setCaptureHistory(mockCaptureHistory.sort((a, b) => new Date(b.captureDate).getTime() - new Date(a.captureDate).getTime()));
-        setIsLoading(false);
-      }, 1000);
-    } catch (error) {
+        setCaptureHistory(transformedData);
+      } else {
+        throw new Error(result.message || 'Failed to load capture history');
+      }
+      
+      setIsLoading(false);
+    } catch (error: any) {
       console.error('포획 기록 로드 실패:', error);
       setIsLoading(false);
+      
+      // 인증 에러 시 홈으로 이동
+      if (error?.response?.status === 401) {
+        localStorage.removeItem('accessToken');
+        navigate('/');
+      } else {
+        // 에러 시 빈 배열로 설정
+        setCaptureHistory([]);
+      }
     }
   };
 
@@ -159,6 +139,10 @@ export default function AlbumPage() {
                   <div className={styles.loadingSpinner}>⚪</div>
                   <p>포획 기록을 불러오는 중...</p>
                 </div>
+              ) : captureHistory.length === 0 ? (
+                <div className={styles.loadingSection}>
+                  <p>사진이 없습니다. 포켓몬을 포획해보세요!</p>
+                </div>
               ) : (
                 <div className={styles.captureGrid}>
                   {captureHistory.map(record => (
@@ -169,7 +153,7 @@ export default function AlbumPage() {
                     >
                       <div className={styles.pokemonImageContainer}>
                         <img 
-                          src={record.originalImage} 
+                          src={getImageUrl(record.originalImage) || ''} 
                           alt="업로드된 인물 사진"
                           className={styles.pokemonImage}
                         />
@@ -214,7 +198,7 @@ export default function AlbumPage() {
                 <div className={styles.imageSection}>
                   <h4>업로드한 사진</h4>
                   <img 
-                    src={selectedRecord.originalImage} 
+                    src={getImageUrl(selectedRecord.originalImage) || ''} 
                     alt="업로드된 사진"
                     className={styles.originalImage}
                   />

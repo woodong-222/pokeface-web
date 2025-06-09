@@ -169,10 +169,10 @@ html, body {
   border-radius: 16px 16px 0 0;
   border: 3px solid rgba(255, 255, 255, 0.2);
   padding: 1.2vh 1.5vw;
-  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(2px);
   gap: 1.5vw;
   max-width: none;
   width: 34.5vw;
@@ -421,12 +421,16 @@ html, body {
   margin-top: 1vh;
   border-radius: 12px;
   overflow: hidden;
-  max-width: 400px;
-
+  max-width: 500px; // 최대 크기를 좀 더 크게
+  width: fit-content; // 이미지 실제 크기에 맞춤
+  
   img {
-    width: 100%;
+    width: auto; // 이미지 원본 크기 유지
     height: auto;
+    max-width: 500px; // 최대 너비 제한
+    max-height: 400px; // 최대 높이도 제한
     display: block;
+    object-fit: contain; // 비율 유지하면서 크기 조정
   }
 }
 
@@ -727,5 +731,37 @@ html, body {
 
   &:active {
     transform: translateY(0);
+  }
+}
+
+.deleteButtonTop {
+  width: 32px;
+  height: 32px;
+  border: none;
+  color: #fafaf8;
+  font-size: 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, #eba5ac, #f65666);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 }

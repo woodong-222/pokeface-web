@@ -902,3 +902,129 @@ html, body {
     transform: translateY(-5px);
   }
 }
+
+.unowned {
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    opacity: 0.7;
+  }
+  
+  .imageWrapper img {
+    filter: brightness(0) saturate(0);
+    opacity: 0.5;
+  }
+  
+  .name {
+    color: #999 !important;
+  }
+  
+  .type {
+    background-color: #999 !important;
+    color: #666 !important;
+  }
+}
+
+// 보유 포켓몬 토글 스위치 스타일
+.dexToggleSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dexToggleLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fafaf8;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.dexToggleSwitch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  
+  &.active {
+    background: linear-gradient(135deg, #4ECDC4, #44b3a8);
+    border-color: #4ECDC4;
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.4);
+    
+    &.active {
+      background: linear-gradient(135deg, #5dd5cd, #4bbeb1);
+    }
+  }
+}
+
+.dexToggleSlider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+  .dexToggleSwitch.active & {
+    transform: translateX(20px);
+    background: #fafaf8;
+  }
+}
+
+.card {
+  transition: all 0.3s ease;
+  
+  &:not(.unowned) {
+    cursor: pointer;
+    
+    &:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  &.unowned {
+    cursor: default;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #666;
+  
+  &::before {
+    content: '⚪';
+    font-size: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+}
+
+@keyframes spin {
+  from { 
+    transform: rotate(0deg); 
+  }
+  to { 
+    transform: rotate(360deg); 
+  }
+}

@@ -10,10 +10,10 @@ import styles from './MypagePage.module.scss';
 
 interface UserInfo {
   id: string;
-  user_name: string;
+  username: string;
   user_id: string;
   joinDate: string;
-  profilePokemonId: number; // 프로필 포켓몬 도감 번호
+  profilePokemonId: number;
   totalPokemon: number;
   caughtPokemon: number;
   completionRate: number;
@@ -23,8 +23,6 @@ interface UserInfo {
 interface UserStats {
   totalCatches: number;
   evolutionCount: number;
-  rarePokemonCount: number;
-  favoriteType: string;
 }
 
 export default function MyPage() {
@@ -46,45 +44,46 @@ export default function MyPage() {
     setIsLoading(true);
     
     try {
-      // TODO: 실제 API 호출로 대체
-      // const response = await fetch('/api/user/me');
-      // const userData = await response.json();
+      const { getMe } = await import('../../../api/user');
+      const result = await getMe();
       
-      // 임시 사용자 데이터
-      setTimeout(() => {
+      if (result.message === 'Success') {
         const mockUserInfo: UserInfo = {
-          id: 'user123',
-          user_name: '포켓몬마스터',
-          user_id: 'pokemonmaster@example.com',
-          joinDate: '2024-01-15',
-          profilePokemonId: 25, // 피카츄
-          totalPokemon: 151,
-          caughtPokemon: 87,
-          completionRate: 57.6,
-          lastLoginDate: '2025-06-06'
+          id: result.user.id,
+          username: result.user.username,
+          user_id: result.user.user_id,
+          joinDate: result.user.joinDate?.split('T')[0] || '2024-01-15',
+          profilePokemonId: result.user.profilePokemonId,
+          totalPokemon: result.stats.totalPokemon,
+          caughtPokemon: result.stats.caughtPokemon,
+          completionRate: result.stats.completionRate,
+          lastLoginDate: result.stats.lastLoginDate || new Date().toISOString().split('T')[0]
         };
 
         const mockUserStats: UserStats = {
-          totalCatches: 134,
-          evolutionCount: 23,
-          rarePokemonCount: 5,
-          favoriteType: '불꽃'
+          totalCatches: result.stats.totalCatches,
+          evolutionCount: result.stats.evolutionCount
         };
 
         setUserInfo(mockUserInfo);
         setUserStats(mockUserStats);
-        setIsLoading(false);
-      }, 1000);
+      } else {
+        throw new Error(result.message || 'Failed to load user info');
+      }
+      
+      setIsLoading(false);
     } catch (error) {
       console.error('사용자 정보 로드 실패:', error);
       setIsLoading(false);
+      
+      localStorage.removeItem('accessToken');
+      navigate('/');
     }
   };
 
   const handleLogout = async () => {
     try {
       localStorage.removeItem('accessToken');
-      
       navigate('/');
     } catch (error) {
       console.error('로그아웃 실패:', error);
@@ -149,7 +148,6 @@ export default function MyPage() {
               </div>
             ) : (
               <div className={styles.contentSection}>
-                {/* 사용자 프로필 */}
                 <div className={styles.profileCard}>
                   <div className={styles.profileHeader}>
                     <div className={styles.avatarSection}>
@@ -158,13 +156,12 @@ export default function MyPage() {
                           src={getPokemonImageUrl(userInfo?.profilePokemonId || 25)} 
                           alt={`프로필 포켓몬 No.${userInfo?.profilePokemonId}`}
                           onError={(e) => {
-                            // 이미지 로드 실패 시 기본 포켓몬으로 대체
                             (e.target as HTMLImageElement).src = getPokemonImageUrl(25);
                           }}
                         />
                       </div>
                       <div className={styles.userBasicInfo}>
-                        <h3>{userInfo?.user_name}</h3>
+                        <h3>{userInfo?.username}</h3>
                         <p>{userInfo?.user_id}</p>
                         <span className={styles.joinDate}>
                           가입일: {userInfo?.joinDate && formatDate(userInfo.joinDate)}
@@ -180,7 +177,6 @@ export default function MyPage() {
                   </div>
                 </div>
 
-                {/* 포켓몬 수집 현황 */}
                 <div className={styles.statsGrid}>
                   <div className={styles.statsCard}>
                     <h4>포켓몬 도감</h4>
@@ -209,20 +205,6 @@ export default function MyPage() {
                     <h4>진화 성공</h4>
                     <div className={styles.statValue}>
                       {userStats?.evolutionCount || 0}회
-                    </div>
-                  </div>
-
-                  <div className={styles.statsCard}>
-                    <h4>희귀 포켓몬</h4>
-                    <div className={styles.statValue}>
-                      {userStats?.rarePokemonCount || 0}마리
-                    </div>
-                  </div>
-
-                  <div className={styles.statsCard}>
-                    <h4>선호 타입</h4>
-                    <div className={styles.statValue}>
-                      {userStats?.favoriteType || '없음'}
                     </div>
                   </div>
 

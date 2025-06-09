@@ -7,17 +7,14 @@ import Button3 from 'src/assets/button3.svg?react';
 import Button4 from 'src/assets/button4.svg?react';
 import Button5 from 'src/assets/button5.svg?react';
 import styles from './CommunityPage.module.scss';
+import { getPosts, createPost, toggleLike, deletePost } from '../../../api/community';
+import type { CommunityPost } from '../../../api/community/entity';
+import { getImageUrl } from '../../../utils/functions/imageUrl';
 
-interface CommunityPost {
-  id: number;
+interface NewPostState {
   title: string;
   content: string;
-  author: string;
-  authorProfilePokemonId: number;
-  createdAt: string;
-  likeCount: number;
-  isLiked: boolean;
-  image?: string;
+  image: File | null;
 }
 
 export default function CommunityPage() {
@@ -25,12 +22,14 @@ export default function CommunityPage() {
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showWriteModal, setShowWriteModal] = useState<boolean>(false);
-  const [newPost, setNewPost] = useState({
+  const [newPost, setNewPost] = useState<NewPostState>({
     title: '',
     content: '',
-    image: null as File | null
+    image: null
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [deletingPostId, setDeletingPostId] = useState<number | null>(null);
   
   const handleLogoClick = () => {
     navigate('/');
@@ -60,74 +59,66 @@ export default function CommunityPage() {
     setIsLoading(true);
     
     try {
-      // TODO: 실제 API 호출로 대체
-      // const response = await fetch('/api/community/posts');
-      // const postsData = await response.json();
+      const result = await getPosts({ limit: 20, offset: 0 });
       
-      // 임시 게시글 데이터
-      setTimeout(() => {
-        const mockPosts: CommunityPost[] = [
-          {
-            id: 1,
-            title: '드디어 피카츄를 잡았어요',
-            content: '3일 동안 찾아다녔는데 드디어 만났네요! 너무 귀여워서 계속 보고 있어요 ㅎㅎ\n포켓몬 도감도 한 칸 더 채워졌고 기분이 너무 좋아요!',
-            author: '포켓몬마스터',
-            authorProfilePokemonId: 25,
-            createdAt: '2025-06-06T10:30:00Z',
-            likeCount: 15,
-            isLiked: false,
-            image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png'
-          },
-          {
-            id: 2,
-            title: '1세대 포켓몬 중에 뭐가 제일 귀여운 것 같나요?',
-            content: '개인적으로는 이브이가 제일 귀여운 것 같아요. 진화형도 다양하고 털도 복슬복슬해서 안고 싶어요!',
-            author: '우동이',
-            authorProfilePokemonId: 133,
-            createdAt: '2025-06-06T09:15:00Z',
-            likeCount: 8,
-            isLiked: true
-          },
-          {
-            id: 3,
-            title: '내 첫 번째 진화 성공했습니다!',
-            content: '꼬부기를 어니부기로 진화시켰어요!\n진화하는 순간 정말 감동적이었습니다 ㅠㅠ\n\n다음 목표는 거북왕으로 만드는 것!\n언제쯤 될지 모르겠지만 열심히 해볼게요~',
-            author: '신입트레이너',
-            authorProfilePokemonId: 7,
-            createdAt: '2025-06-06T07:20:00Z',
-            likeCount: 12,
-            isLiked: false,
-            image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png'
-          }
-        ];
-        
-        setPosts(mockPosts.sort((a, b) => b.id - a.id)); // ID 역순 정렬 (최신순)
-        setIsLoading(false);
-      }, 1000);
+      if (result.message === 'Success') {
+        setPosts(result.posts);
+      } else {
+        throw new Error(result.message || 'Failed to load posts');
+      }
     } catch (error) {
       console.error('게시글 로드 실패:', error);
+      alert('게시글을 불러오는데 실패했습니다.');
+    } finally {
       setIsLoading(false);
     }
   };
 
   const handleLike = async (postId: number) => {
     try {
-      // TODO: 실제 API 호출로 대체
-      // await fetch(`/api/community/posts/${postId}/like`, { method: 'POST' });
+      const result = await toggleLike({ postId });
       
-      setPosts(prevPosts =>
-        prevPosts.map(post =>
-          post.id === postId
-            ? {
-                ...post,
-                isLiked: !post.isLiked,
-                likeCount: post.isLiked ? post.likeCount - 1 : post.likeCount + 1
-              }
-            : post
-        )
-      );
+      if (result.message === 'Success') {
+        setPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.id === postId
+              ? {
+                  ...post,
+                  isLiked: result.isLiked,
+                  likeCount: result.likeCount
+                }
+              : post
+          )
+        );
+      }
     } catch (error) {
-      console.error('추천 실패:', error);
+      console.error('좋아요 처리 실패:', error);
+      alert('좋아요 처리에 실패했습니다.');
+    }
+  };
+
+  const handleDelete = async (postId: number) => {
+    if (!confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+      return;
+    }
+
+    setDeletingPostId(postId);
+
+    try {
+      const result = await deletePost({ postId });
+      
+      if (result.message === 'Post deleted successfully') {
+        // 삭제된 게시글을 목록에서 제거
+        setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+        alert('게시글이 삭제되었습니다.');
+      } else {
+        throw new Error(result.message || 'Failed to delete post');
+      }
+    } catch (error: any) {
+      console.error('게시글 삭제 실패:', error);
+      alert(error.response?.data?.message || '게시글 삭제에 실패했습니다.');
+    } finally {
+      setDeletingPostId(null);
     }
   };
 
@@ -157,34 +148,31 @@ export default function CommunityPage() {
       return;
     }
 
-    try {
-      // TODO: 실제 API 호출로 대체
-      // const formData = new FormData();
-      // formData.append('title', newPost.title);
-      // formData.append('content', newPost.content);
-      // if (newPost.image) formData.append('image', newPost.image);
-      // await fetch('/api/community/posts', { method: 'POST', body: formData });
-      
-      // 임시로 새 게시글 추가
-      const tempPost: CommunityPost = {
-        id: Date.now(),
-        title: newPost.title,
-        content: newPost.content,
-        author: '현재사용자',
-        authorProfilePokemonId: 25,
-        createdAt: new Date().toISOString(),
-        likeCount: 0,
-        isLiked: false,
-        image: imagePreview || undefined
-      };
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-      setPosts(prev => [tempPost, ...prev]);
-      setShowWriteModal(false);
-      setNewPost({ title: '', content: '', image: null });
-      setImagePreview(null);
-    } catch (error) {
+    try {
+      const result = await createPost({
+        title: newPost.title.trim(),
+        content: newPost.content.trim(),
+        image: newPost.image || undefined
+      });
+      
+      if (result.message === 'Post created successfully') {
+        // 새 게시글을 목록 맨 앞에 추가
+        setPosts(prev => [result.post, ...prev]);
+        setShowWriteModal(false);
+        setNewPost({ title: '', content: '', image: null });
+        setImagePreview(null);
+        alert('게시글이 작성되었습니다.');
+      } else {
+        throw new Error(result.message || 'Failed to create post');
+      }
+    } catch (error: any) {
       console.error('게시글 작성 실패:', error);
-      alert('게시글 작성에 실패했습니다.');
+      alert(error.response?.data?.message || '게시글 작성에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -247,6 +235,10 @@ export default function CommunityPage() {
                   <div className={styles.loadingSpinner}>⚪</div>
                   <p>게시글을 불러오는 중...</p>
                 </div>
+              ) : posts.length === 0 ? (
+                <div className={styles.loadingSection}>
+                  <p>게시글이 없습니다.</p>
+                </div>
               ) : (
                 <div className={styles.postsList}>
                   {posts.map(post => (
@@ -264,6 +256,15 @@ export default function CommunityPage() {
                             <span className={styles.postTime}>{formatDate(post.createdAt)}</span>
                           </div>
                         </div>
+                        {post.isAuthor && (
+                          <button 
+                            className={styles.deleteButtonTop}
+                            onClick={() => handleDelete(post.id)}
+                            disabled={deletingPostId === post.id}
+                          >
+                            {deletingPostId === post.id ? '삭제 중...' : '🗑️'}
+                          </button>
+                        )}
                       </div>
                       
                       <div className={styles.postContent}>
@@ -271,7 +272,10 @@ export default function CommunityPage() {
                         <p className={styles.postText}>{post.content}</p>
                         {post.image && (
                           <div className={styles.postImage}>
-                            <img src={post.image} alt="게시글 이미지" />
+                            <img 
+                              src={getImageUrl(post.image) || ''} 
+                              alt="게시글 이미지"
+                            />
                           </div>
                         )}
                       </div>
@@ -310,6 +314,7 @@ export default function CommunityPage() {
                 onChange={(e) => setNewPost(prev => ({ ...prev, title: e.target.value }))}
                 className={styles.titleInput}
                 maxLength={100}
+                disabled={isSubmitting}
               />
               
               <textarea
@@ -318,6 +323,7 @@ export default function CommunityPage() {
                 onChange={(e) => setNewPost(prev => ({ ...prev, content: e.target.value }))}
                 className={styles.contentTextarea}
                 maxLength={1000}
+                disabled={isSubmitting}
               />
 
               <div className={styles.imageUploadSection}>
@@ -330,6 +336,7 @@ export default function CommunityPage() {
                   accept="image/*"
                   onChange={handleImageChange}
                   style={{ display: 'none' }}
+                  disabled={isSubmitting}
                 />
                 {imagePreview && (
                   <div className={styles.imagePreview}>
@@ -340,6 +347,7 @@ export default function CommunityPage() {
                         setImagePreview(null);
                         setNewPost(prev => ({ ...prev, image: null }));
                       }}
+                      disabled={isSubmitting}
                     >
                       ×
                     </button>
@@ -350,11 +358,19 @@ export default function CommunityPage() {
             </div>
 
             <div className={styles.modalActions}>
-              <button className={styles.cancelButton} onClick={closeWriteModal}>
+              <button 
+                className={styles.cancelButton} 
+                onClick={closeWriteModal}
+                disabled={isSubmitting}
+              >
                 취소
               </button>
-              <button className={styles.submitButton} onClick={handleSubmitPost}>
-                작성완료
+              <button 
+                className={styles.submitButton} 
+                onClick={handleSubmitPost}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? '작성 중...' : '작성완료'}
               </button>
             </div>
           </div>

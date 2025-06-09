@@ -10,6 +10,7 @@ import DeleteIcon from 'src/assets/delete.svg?react';
 import PokeBall from 'src/assets/bell.svg?react';
 import PokefaceLogo from 'src/assets/logo.svg?react';
 import styles from './DexPage.module.scss';
+import { getUserPokemons } from '../../../api/pokemon';
 
 const MAX_POKEMON = 151;
 
@@ -55,12 +56,21 @@ interface Pokemon {
   abilities?: string[];
   species?: string;
   description?: string;
+  isOwned?: boolean;
+  evolutionStage?: number;
+  isFirstCapture?: boolean;
+}
+
+interface UserPokemon {
+  pokemon_id: number;
+  evolution_stage: number;
 }
 
 export default function DexPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [userPokemons, setUserPokemons] = useState<UserPokemon[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set());
   const [showOwnedOnly, setShowOwnedOnly] = useState(false);
@@ -68,6 +78,25 @@ export default function DexPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pokemonDetail, setPokemonDetail] = useState<Pokemon | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+
+  const loadUserPokemons = async () => {
+    try {
+      const result = await getUserPokemons();
+      
+      if (result.message === 'Success') {
+        setUserPokemons(result.pokemons);
+      } else {
+        throw new Error(result.message || 'Failed to load user pokemons');
+      }
+    } catch (error: any) {
+      console.error('사용자 포켓몬 로드 실패:', error);
+      
+      if (error?.response?.status === 401) {
+        localStorage.removeItem('accessToken');
+        navigate('/login');
+      }
+    }
+  };
 
   const loadAllPokemons = async () => {
     setIsLoading(true);
@@ -101,7 +130,7 @@ export default function DexPage() {
       validResults.sort((a, b) => a.id - b.id);
       
       setPokemons(validResults);
-    }finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -134,7 +163,7 @@ export default function DexPage() {
 
       const detailedPokemon: Pokemon = {
         ...pokemon,
-        image: detail.sprites.versions['generation-v']['black-white'].animated?.front_default,
+        image: detail.sprites.versions['generation-v']['black-white'].animated?.front_default || pokemon.image,
         height: detail.height / 10,
         weight: detail.weight / 10,
         stats: {
@@ -157,6 +186,10 @@ export default function DexPage() {
   };
 
   const handleCardClick = async (pokemon: Pokemon) => {
+    if (!pokemon.isOwned) {
+      return;
+    }
+
     setSelectedPokemon(pokemon);
     setIsModalOpen(true);
     setPokemonDetail(null);
@@ -183,6 +216,7 @@ export default function DexPage() {
 
   useEffect(() => {
     loadAllPokemons();
+    loadUserPokemons();
   }, []);
 
   useEffect(() => {
@@ -225,14 +259,43 @@ export default function DexPage() {
     setSelectedTypes(new Set());
   };
 
+  const pokemonsWithOwnership = useMemo(() => {
+    return pokemons.map(pokemon => {
+      const userPokemon = userPokemons.find(up => up.pokemon_id === pokemon.id);
+      
+      const getMinEvolutionStage = (pokemonId: number): number => {
+        // 2단계부터 시작하는 포켓몬들
+        const secondStageStarters = [
+          20, 22, 24, 26, 28, 36, 38, 40, 42, 47, 49, 51, 53, 55, 57, 59,
+          73, 78, 80, 82, 85, 87, 89, 91, 97, 99, 101, 103, 105, 110, 112,
+          117, 119, 121, 130, 134, 135, 136
+        ];
+        
+        return secondStageStarters.includes(pokemonId) ? 2 : 1;
+      };
+      
+      const minStage = getMinEvolutionStage(pokemon.id);
+      const isFirstCapture = userPokemon && userPokemon.evolution_stage === minStage;
+      
+      return {
+        ...pokemon,
+        isOwned: !!userPokemon,
+        evolutionStage: userPokemon?.evolution_stage || 0,
+        isFirstCapture: isFirstCapture
+      };
+    });
+  }, [pokemons, userPokemons]);
+
   const filtered = useMemo(() => {
-    return pokemons.filter(p => {
+    return pokemonsWithOwnership.filter(p => {
       const matchesSearch = p.name.includes(search) || p.types.some(t => t.includes(search));
       const matchesType = selectedTypes.size === 0 || 
         Array.from(selectedTypes).every(selectedType => p.types.includes(selectedType));
-      return matchesSearch && matchesType;
+      const matchesOwnership = !showOwnedOnly || p.isOwned;
+      
+      return matchesSearch && matchesType && matchesOwnership;
     });
-  }, [pokemons, search, selectedTypes]);
+  }, [pokemonsWithOwnership, search, selectedTypes, showOwnedOnly]);
 
   const getCardListClass = () => {
     return 'few-cards';
@@ -316,22 +379,37 @@ export default function DexPage() {
               {isLoading ? (
                 <div className={styles.loading}>포켓몬 도감을 불러오는 중... </div>
               ) : (
-                filtered.map(({ id, name, types, image }) => {
+                filtered.map(({ id, name, types, image, isOwned, evolutionStage, isFirstCapture }) => {
                   const background = types.length === 1
                     ? TYPE_COLOR_MAP[types[0]]
                     : `linear-gradient(135deg, ${TYPE_COLOR_MAP[types[0]]} 30%, ${TYPE_COLOR_MAP[types[1]]} 100%)`;
+                  
                   return (
-                    <div key={`pokemon-${id}`} className={styles.card} onClick={() => handleCardClick({ id, name, types, image })}>
+                    <div 
+                      key={`pokemon-${id}`} 
+                      className={`${styles.card} ${!isOwned ? styles.unowned : ''}`} 
+                      onClick={() => handleCardClick({ id, name, types, image, isOwned, evolutionStage, isFirstCapture })}
+                      style={{ cursor: isOwned ? 'pointer' : 'default' }}
+                    >
                       <div className={styles.cardInner}>
-                        <div className={styles.cardFront} style={{ background }}>
+                        <div className={styles.cardFront} style={{ background: isOwned ? background : '#666666' }}>
                           <div className={styles.innerCard}>
                             <div className={styles.imageWrapper}>
-                              <img src={image} alt={name} />
+                              <img 
+                                src={image} 
+                                alt={name}
+                                style={{ 
+                                  filter: isOwned ? 'none' : 'brightness(0) saturate(0)',
+                                  opacity: isOwned ? 1 : 0.5
+                                }}
+                              />
                             </div>
                             <div className={styles.no}>No. {String(id).padStart(4, '0')}</div>
-                            <div className={styles.name}>{name}</div>
+                            <div className={styles.name} style={{ color: isOwned ? '#fff' : '#999' }}>
+                              {isOwned ? name : '???'}
+                            </div>
                             <div className={styles.typeBox}>
-                              {types.map((t, index) => (
+                              {isOwned ? types.map((t, index) => (
                                 <div
                                   key={`${id}-${t}-${index}`}
                                   className={styles.type}
@@ -339,7 +417,11 @@ export default function DexPage() {
                                 >
                                   {t}
                                 </div>
-                              ))}
+                              )) : (
+                                <div className={styles.type} style={{ backgroundColor: '#999' }}>
+                                  ???
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -362,7 +444,7 @@ export default function DexPage() {
         </div>
       </div>
 
-      {isModalOpen && selectedPokemon && (
+      {isModalOpen && selectedPokemon && selectedPokemon.isOwned && (
         <div className={styles.modalOverlay} onClick={closeModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <button className={styles.closeButton} onClick={closeModal}>×</button>
