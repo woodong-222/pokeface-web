@@ -34,21 +34,24 @@ export default function CommunityPage() {
   const handleLogoClick = () => {
     navigate('/');
   };
-
+  
   const getPokemonImageUrl = (pokemonId: number): string => {
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
     
+    const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+    const now = new Date();
+    const diffInMinutes = Math.floor((now.getTime() - kstDate.getTime()) / (1000 * 60));
+
     if (diffInMinutes < 1) return '방금 전';
     if (diffInMinutes < 60) return `${diffInMinutes}분 전`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}시간 전`;
-    
-    return date.toLocaleDateString('ko-KR', {
+
+    return kstDate.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'

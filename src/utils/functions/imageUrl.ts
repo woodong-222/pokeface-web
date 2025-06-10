@@ -5,9 +5,12 @@ export const getImageUrl = (imagePath: string | null): string | null => {
     return imagePath;
   }
   
-  const baseUrl = import.meta.env.VITE_SERVER_URL.replace('/api', '');
+  // URL 객체를 사용한 안전한 방법
+  const serverUrl = new URL(import.meta.env.VITE_SERVER_URL);
+  const baseUrl = `${serverUrl.protocol}//${serverUrl.host}`;
   
-  const cleanPath = imagePath.replace('../', '/');
+  // 경로가 '/'로 시작하지 않으면 추가
+  const cleanPath = imagePath.startsWith('/') ? imagePath : '/' + imagePath;
   
   return `${baseUrl}${cleanPath}`;
 };

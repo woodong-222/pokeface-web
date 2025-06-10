@@ -20,7 +20,7 @@ html, body {
   min-height: 780px; 
   z-index: -1;
   pointer-events: none;
-  background-image: url('src/assets/dex.svg');
+  background-image: url('@/assets/dex.svg');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: left calc(100% + 2vh);

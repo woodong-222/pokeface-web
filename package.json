@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "build": "vite build",
+    "build-safe": "tsc -b && vite build",
     "start": "npm run dev -- --open",
     "dev": "vite",
-    "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

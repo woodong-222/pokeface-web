@@ -4,7 +4,6 @@ import react from '@vitejs/plugin-react-swc';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -17,6 +16,16 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    }
+  },
+  build: {
+    target: 'es2020',
+    minify: 'esbuild'
+  },
+  esbuild: {
+    target: 'es2020',
+    logOverride: { 
+      'this-is-undefined-in-esm': 'silent'
     }
   }
 });

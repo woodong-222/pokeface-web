@@ -7,6 +7,7 @@ import Button3 from 'src/assets/button3.svg?react';
 import Button4 from 'src/assets/button4.svg?react';
 import Button5 from 'src/assets/button5.svg?react';
 import styles from './HuntPage.module.scss';
+import { compressImage, validateImageFile, getFileSizeInfo } from '../../../utils/functions/imageCompression';
 
 interface CatchResult {
   pokemonId: number;
@@ -29,6 +30,11 @@ export default function HuntPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [isCompressing, setIsCompressing] = useState<boolean>(false);
+  const [compressionInfo, setCompressionInfo] = useState<{
+    original: string;
+    compressed: string;
+  } | null>(null);
   const [catchResult, setCatchResult] = useState<CatchResult | null>(null);
   const [showResult, setShowResult] = useState<boolean>(false);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
@@ -59,27 +65,57 @@ export default function HuntPage() {
     }
   };
 
-  const handleFileSelect = (file: File) => {
-    if (file.size > 10 * 1024 * 1024) {
-      showError('파일 크기는 10MB 이하만 업로드 가능합니다.');
-      return;
-    }
-
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      showError('JPG, PNG, GIF, WEBP 형식의 이미지만 업로드 가능합니다.');
-      return;
-    }
-
-    setSelectedFile(file);
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (e.target?.result) {
-        setSelectedImage(e.target.result as string);
+  const handleFileSelect = async (file: File) => {
+    try {console.log('이미지 압축 모듈 로드됨:', typeof compressImage);
+      const validation = validateImageFile(file);
+      if (!validation.isValid) {
+        showError(validation.error || '유효하지 않은 파일입니다.');
+        return;
       }
-    };
-    reader.readAsDataURL(file);
+
+      const originalSize = getFileSizeInfo(file);
+      console.log(`원본 파일: ${originalSize.formatted}`);
+
+      let processedFile = file;
+      setIsCompressing(true);
+      
+      try {
+        processedFile = await compressImage(file, {
+          maxWidth: 800,
+          maxHeight: 800,
+          quality: 0.6,
+          maxSizeKB: 128
+        });
+
+        const compressedSize = getFileSizeInfo(processedFile);
+        console.log(`압축 완료: ${originalSize.formatted} → ${compressedSize.formatted}`);
+        
+        setCompressionInfo({
+          original: originalSize.formatted,
+          compressed: compressedSize.formatted
+        });
+      } catch (error) {
+        console.error('이미지 압축 실패:', error);
+        showError('이미지 압축에 실패했습니다. 다른 이미지를 선택해주세요.');
+        return;
+      } finally {
+        setIsCompressing(false);
+      }
+
+      setSelectedFile(processedFile);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setSelectedImage(e.target.result as string);
+        }
+      };
+      reader.readAsDataURL(processedFile);
+
+    } catch (error) {
+      console.error('파일 처리 실패:', error);
+      showError('파일 처리에 실패했습니다.');
+    }
   };
 
   const handleUploadClick = () => {
@@ -181,6 +217,7 @@ export default function HuntPage() {
     setSelectedFile(null);
     setCatchResult(null);
     setShowResult(false);
+    setCompressionInfo(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -288,13 +325,26 @@ export default function HuntPage() {
                     <div className={styles.uploadIcon}>📷</div>
                     <h3>인물 사진을 드래그하거나 클릭하여 업로드</h3>
                     <p className={styles.uploadSubtext}>
-                      최대 10MB, JPG, PNG, GIF, WEBP 형식만 지원
+                      최대 20MB, JPG, PNG, WEBP 형식만 지원
                     </p>
                   </div>
                 )}
               </div>
               
-              {selectedImage && (
+              {isCompressing && (
+                <div className={styles.compressionStatus}>
+                  <div className={styles.spinner}>⚪</div>
+                  <p>이미지 압축 중...</p>
+                </div>
+              )}
+
+              {compressionInfo && (
+                <div className={styles.compressionInfo}>
+                  <p></p>
+                </div>
+              )}
+              
+              {selectedImage && !isCompressing && (
                 <div className={styles.actionButtons}>
                   <button 
                     className={styles.catchButton}
@@ -324,7 +374,6 @@ export default function HuntPage() {
         </div>
       </div>
 
-      {/* 에러 모달 */}
       {showErrorModal && (
         <div className={styles.modalOverlay} onClick={closeErrorModal}>
           <div className={`${styles.modalContent} ${styles.errorModal}`} onClick={(e) => e.stopPropagation()}>
@@ -351,7 +400,6 @@ export default function HuntPage() {
         </div>
       )}
 
-      {/* 포획 결과 모달 */}
       {showResult && catchResult && (
         <div className={styles.modalOverlay} onClick={closeResultModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
